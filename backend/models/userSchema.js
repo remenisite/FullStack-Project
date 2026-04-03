@@ -1,11 +1,11 @@
-const { type } = require("express/lib/response");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      trim: true, //---------------- remove extra object
+      trim: true,
     },
     email: {
       type: String,
@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      unique: true,
     },
     phone: {
       type: String,
@@ -22,14 +23,14 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       default: "user",
       enum: ["admin", "user"],
-    },
-    isVarified: {
-      type: Boolean,
-      default: false,
     },
     otp: {
       type: Number,
@@ -50,4 +51,6 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
-module.exports = mongoose.model("userData", userSchema);
+
+
+module.exports = mongoose.model("user", userSchema);
