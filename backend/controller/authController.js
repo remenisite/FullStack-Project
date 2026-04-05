@@ -1,7 +1,7 @@
 const userSchema = require("../models/userSchema");
 const { sendEmail } = require("../services/emailServices");
 const emailTemplate = require("../services/emailTamplate");
-const { generateOTP } = require("../services/helpers");
+const { generateOTP, generateAccTkn } = require("../services/helpers");
 const { responseHandler } = require("../utils/responseHandler");
 const { isvelidEmail, isvalidPassword } = require("../utils/validation");
 
@@ -104,9 +104,11 @@ const signin = async (req,res) =>{
     const matchPass = await exixstingUser.comparePassword(password);
     if (!matchPass) return responseHandler.success(res,400,"Invalid Request");
 
+    const AccTkn = generateAccTkn(exixstingUser)
 
-        responseHandler.success(res,200,"Signin Success");
-    
+
+
+  responseHandler.success(res,200,"Signin Success");    
   } catch (error) {
     console.log(error)
 
